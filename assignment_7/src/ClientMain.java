@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ChatClient {
+public class ClientMain {
 	private JTextArea incoming;
 	private JTextField outgoing;
 	private BufferedReader reader;
 	private PrintWriter writer;
-	
+	JTextField ip;
+
 
 	public void run() throws Exception {
 		initView();
@@ -17,7 +18,7 @@ public class ChatClient {
 	}
 
 	private void initView() {
-		JFrame frame = new JFrame("Ludicrously Simple Chat Client");
+		JFrame frame = new JFrame("Chat Client");
 		JPanel mainPanel = new JPanel();
 		incoming = new JTextArea(15, 50);
 		incoming.setLineWrap(true);
@@ -32,15 +33,22 @@ public class ChatClient {
 		mainPanel.add(qScroller);
 		mainPanel.add(outgoing);
 		mainPanel.add(sendButton);
+		ip = new JTextField(30);
+		mainPanel.add(ip);
+		mainPanel.setBackground(Color.cyan);
 		frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
 		frame.setSize(650, 500);
 		frame.setVisible(true);
+
+
+		//frame.getContentPane().setBackground(Color.BLUE);
+		//frame.setBackground(Color.BLUE);
 
 	}
 
 	private void setUpNetworking() throws Exception {
 		@SuppressWarnings("resource")
-		Socket sock = new Socket("10.145.78.10", 4242);
+		Socket sock = new Socket(ip.getText(), 4242);
 		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 		reader = new BufferedReader(streamReader);
 		writer = new PrintWriter(sock.getOutputStream());
@@ -60,7 +68,7 @@ public class ChatClient {
 
 	public static void main(String[] args) {
 		try {
-			new ChatClient().run();
+			new ClientMain().run();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -4,15 +4,17 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class ChatServer {
+public class ServerMain {
 	private ArrayList<PrintWriter> clientOutputStreams;
 
-	ArrayList<String> username = new ArrayList<>();
+	static HashMap<String, String> username = new HashMap<>();
 	public static void main(String[] args) {
 		try {
-			new ChatServer().setUpNetworking();
+			new ServerMain().setUpNetworking();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -24,7 +26,8 @@ public class ChatServer {
 		ServerSocket serverSock = new ServerSocket(4242);
 		while (true) {
 			Socket clientSocket = serverSock.accept();
-			username.add(clientSocket.getLocalAddress().toString());
+			//todo walter fix this please the line below this im pretty sure pls pls pls
+			username.put(clientSocket.getRemoteSocketAddress().toString(), "user " + username.size()+1);
 			PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 			clientOutputStreams.add(writer);
 
@@ -46,9 +49,11 @@ public class ChatServer {
 
 	class ClientHandler implements Runnable {
 		private BufferedReader reader;
+		private SocketAddress s;
 
 		public ClientHandler(Socket clientSocket) throws IOException {
 			Socket sock = clientSocket;
+			s = clientSocket.getRemoteSocketAddress();
 			reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		}
 
@@ -57,7 +62,7 @@ public class ChatServer {
 			try {
 				while ((message = reader.readLine()) != null) {
 					System.out.println("read " + message);
-					notifyClients(message);
+					notifyClients(ServerMain.username.get(s.toString()) + ": " + message);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
