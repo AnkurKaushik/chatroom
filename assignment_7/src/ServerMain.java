@@ -26,8 +26,8 @@ public class ServerMain {
 		ServerSocket serverSock = new ServerSocket(4242);
 		while (true) {
 			Socket clientSocket = serverSock.accept();
-			//todo walter fix this please the line below this im pretty sure pls pls pls
-			username.put(clientSocket.getRemoteSocketAddress().toString(), "user " + username.size()+1);
+			int n = username.size() + 1;
+			username.put(clientSocket.getRemoteSocketAddress().toString(), "user " + n);
 			PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 			clientOutputStreams.add(writer);
 
@@ -61,8 +61,21 @@ public class ServerMain {
 			String message;
 			try {
 				while ((message = reader.readLine()) != null) {
-					System.out.println("read " + message);
-					notifyClients(ServerMain.username.get(s.toString()) + ": " + message);
+					//code to change username
+					if(message.contains(":"))
+					{
+						if (message.substring(0, message.indexOf(':')).equals("ChangeName:"))
+						{
+							//todo need to get this part to work walter take a look at it
+							username.replace(s.toString(), message.substring(message.indexOf(':'), message.length()));
+							System.out.println("Changed Name");
+						}
+					}
+					else
+					{
+						System.out.println("read " + message);
+						notifyClients(ServerMain.username.get(s.toString()) + ": " + message);
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -10,6 +10,7 @@ public class ClientMain {
 	private BufferedReader reader;
 	private PrintWriter writer;
 	JTextField ip;
+	String ip1;
 
 
 	public void run() throws Exception {
@@ -20,6 +21,11 @@ public class ClientMain {
 	private void initView() {
 		JFrame frame = new JFrame("Chat Client");
 		JPanel mainPanel = new JPanel();
+
+		//logic for ip stuff
+		ip1 = JOptionPane.showInputDialog("Enter IP address");
+
+
 		incoming = new JTextArea(15, 50);
 		incoming.setLineWrap(true);
 		incoming.setWrapStyleWord(true);
@@ -33,8 +39,8 @@ public class ClientMain {
 		mainPanel.add(qScroller);
 		mainPanel.add(outgoing);
 		mainPanel.add(sendButton);
-		ip = new JTextField(30);
-		mainPanel.add(ip);
+		//ip = new JTextField(30);
+		//mainPanel.add(ip);
 		mainPanel.setBackground(Color.cyan);
 		frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
 		frame.setSize(650, 500);
@@ -48,7 +54,7 @@ public class ClientMain {
 
 	private void setUpNetworking() throws Exception {
 		@SuppressWarnings("resource")
-		Socket sock = new Socket(ip.getText(), 4242);
+		Socket sock = new Socket(ip1, 4242);
 		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 		reader = new BufferedReader(streamReader);
 		writer = new PrintWriter(sock.getOutputStream());
