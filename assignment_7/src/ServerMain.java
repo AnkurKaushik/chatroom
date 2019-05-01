@@ -7,11 +7,13 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 public class ServerMain {
 	private ArrayList<PrintWriter> clientOutputStreams;
 
 	static HashMap<String, String> username = new HashMap<>();
+	int n = 0;
 	public static void main(String[] args) {
 		try {
 			new ServerMain().setUpNetworking();
@@ -21,13 +23,16 @@ public class ServerMain {
 	}
 
 	private void setUpNetworking() throws Exception {
+
 		clientOutputStreams = new ArrayList<PrintWriter>();
 		@SuppressWarnings("resource")
 		ServerSocket serverSock = new ServerSocket(4242);
 		while (true) {
 			Socket clientSocket = serverSock.accept();
-			int n = username.size() + 1;
-			username.put(clientSocket.getRemoteSocketAddress().toString(), "user " + n);
+
+			n += 1;
+			username.put(clientSocket.getRemoteSocketAddress().toString(), "Guest " + n);
+
 			PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 			clientOutputStreams.add(writer);
 
