@@ -11,7 +11,7 @@ import java.util.Hashtable;
 
 public class ServerMain {
 	private ArrayList<PrintWriter> clientOutputStreams;
-
+	static ArrayList<String> listUsers = new ArrayList<>();
 	static HashMap<String, String> username = new HashMap<>();
 	int n = 0;
 	public static void main(String[] args) {
@@ -23,7 +23,9 @@ public class ServerMain {
 	}
 
 	private void setUpNetworking() throws Exception {
-
+		listUsers.add("Ankur");
+		listUsers.add("Nandakumar");
+		listUsers.add("Walter");
 		clientOutputStreams = new ArrayList<PrintWriter>();
 		@SuppressWarnings("resource")
 		ServerSocket serverSock = new ServerSocket(4242);
@@ -67,20 +69,22 @@ public class ServerMain {
 			try {
 				while ((message = reader.readLine()) != null) {
 					//code to change username
-					if(message.contains(":"))
+					/*if(message.contains(":"))
 					{
-						if (message.substring(0, message.indexOf(':')).equals("ChangeName:"))
+						switch(message)
 						{
-							//todo need to get this part to work walter take a look at it
-							username.replace(s.toString(), message.substring(message.indexOf(':'), message.length()));
-							System.out.println("Changed Name");
+							case ":cat:": //do logic for cat
+								break;
+							case ":dog": //do logic for dog
+								break;
+							case ":panda:": //do logic for panda
+								break;
 						}
-					}
-					else
-					{
+					}*/
+
 						System.out.println("read " + message);
 						notifyClients(ServerMain.username.get(s.toString()) + ": " + message);
-					}
+
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

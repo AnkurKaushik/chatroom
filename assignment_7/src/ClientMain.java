@@ -16,7 +16,7 @@ public class ClientMain {
 	JTextField ip;
 	static JComboBox<String> fonts;
 	static JCheckBox jcb;
-
+	static JTextField username;
 
 	String ip1;
     String ip2;
@@ -41,7 +41,7 @@ public class ClientMain {
         panel.add(label, BorderLayout.WEST);
 
         JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
-        JTextField username = new JTextField();
+        username = new JTextField();
         controls.add(username);
         JPasswordField password = new JPasswordField();
         controls.add(password);
@@ -54,6 +54,8 @@ public class ClientMain {
 		incoming.setLineWrap(true);
 		incoming.setWrapStyleWord(true);
 		incoming.setEditable(false);
+
+
 
 
 		//going to make a dropdown to set font type
@@ -102,6 +104,16 @@ public class ClientMain {
 	private void setUpNetworking() throws Exception {
 		@SuppressWarnings("resource")
 		Socket sock = new Socket(ip1, 4242);
+		String s = sock.getRemoteSocketAddress().toString();
+		for(String p: ServerMain.listUsers)
+		{
+			System.out.print(p);
+			System.out.print(username);
+			if(p.equals(username))
+			{
+				ServerMain.username.put(s,p);
+			}
+		}
 		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 		reader = new BufferedReader(streamReader);
 		writer = new PrintWriter(sock.getOutputStream());
@@ -167,8 +179,14 @@ public class ClientMain {
 			String message;
 			try {
 				while ((message = reader.readLine()) != null) {
-					
-						incoming.append(message + "\n");
+
+					System.out.println(message);
+					if(message.equals("Guest 1: :cat:"))
+					{
+						System.out.println(message);
+						Icon icon = new ImageIcon("/assignment_7/src/cat.png");
+					}
+					incoming.append(message + "\n");
 				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
