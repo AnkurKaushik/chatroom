@@ -11,9 +11,8 @@ import java.util.Hashtable;
 
 public class ServerMain {
 	private ArrayList<PrintWriter> clientOutputStreams;
-	static ArrayList<String> listUsers = new ArrayList<>();
 	static HashMap<String, String> username = new HashMap<>();
-	int n = 0;
+	static int n = 0;
 	public static void main(String[] args) {
 		try {
 			new ServerMain().setUpNetworking();
@@ -23,9 +22,7 @@ public class ServerMain {
 	}
 
 	private void setUpNetworking() throws Exception {
-		listUsers.add("Ankur");
-		listUsers.add("Nandakumar");
-		listUsers.add("Walter");
+
 		clientOutputStreams = new ArrayList<PrintWriter>();
 		@SuppressWarnings("resource")
 		ServerSocket serverSock = new ServerSocket(4242);
@@ -68,19 +65,6 @@ public class ServerMain {
 			String message;
 			try {
 				while ((message = reader.readLine()) != null) {
-					//code to change username
-					/*if(message.contains(":"))
-					{
-						switch(message)
-						{
-							case ":cat:": //do logic for cat
-								break;
-							case ":dog": //do logic for dog
-								break;
-							case ":panda:": //do logic for panda
-								break;
-						}
-					}*/
 
 						System.out.println("read " + message);
 						notifyClients(ServerMain.username.get(s.toString()) + ": " + message);
