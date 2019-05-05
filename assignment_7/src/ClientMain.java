@@ -1,6 +1,13 @@
+import com.sun.javafx.logging.JFRInputEvent;
+import com.sun.jmx.mbeanserver.JmxMBeanServer;
+import com.sun.media.jfxmedia.events.PlayerStateEvent;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 
 import java.io.*;
 import java.net.*;
@@ -28,17 +35,31 @@ public class ClientMain {
 	static JMenuItem pass;
 	static JMenuItem quit;
 	static JMenuItem changePW;
+    static JMenuItem load;
+    static JMenuItem browse;
+    static JMenuItem stop;
+
 	String ip1;
     String passwordStr;
+    static String musicPath;
 
 
-	public void run() throws Exception {
+    JFileChooser selection;
+
+
+    static MediaPlayer mp;
+
+
+
+    public void run() throws Exception {
 		initView();
-		//playMusic();
+
+		//playMusic(); //calling this directly from the action listener now
 		setUpNetworking();
 	}
 
-	private void initView() {
+	private void initView() throws Exception {
+
 		JFrame frame = new JFrame("Chat Client");
 		frame.setPreferredSize(new Dimension(800, 800));
 		frame.setMinimumSize(new Dimension(800, 800));
@@ -51,15 +72,43 @@ public class ClientMain {
 
 		jmb = new JMenuBar();
 		frame.setJMenuBar(jmb);
-		JMenu file = new JMenu("File");
-		pass = new JMenuItem("Show Password");
-		quit = new JMenuItem("Quit");
-		changePW = new JMenuItem("Change Password");
-		jmb.add(file);
 
+		//This is the code for the File tab on the menu bar
+        JMenu file = new JMenu("File");
+        pass = new JMenuItem("Show Password");
+        quit = new JMenuItem("Quit");
+        changePW = new JMenuItem("Change Password");
+		jmb.add(file);
 		file.add(pass);
 		file.add(changePW);
 		file.add(quit);
+
+
+
+
+
+		//this is the code for the Music tab of the menu bar
+
+        JMenu music = new JMenu("Music");
+        jmb.add(music);
+        load = new JMenuItem("Load");
+        browse = new JMenuItem("Browse");
+        stop = new JMenuItem("Stop");
+        //music.add(load); //seems redundant since we can browse for music
+        music.add(browse);
+        music.add(stop);
+        selection = new JFileChooser();
+        selection.setCurrentDirectory(new File("."));
+        selection.setDialogTitle("Choose your character!");
+        //selection.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        browse.addActionListener(browseMusic);
+        load.addActionListener(loadMusic);
+        stop.addActionListener(stopMusic);
+
+
+
+
+
 
         JPanel label = new JPanel(new GridLayout(0, 1, 2, 2));
         label.add(new JLabel("Username", SwingConstants.RIGHT));
@@ -134,6 +183,8 @@ public class ClientMain {
 		quit.addActionListener(quitPgrm);
 		pass.addActionListener(showpass);
 		changePW.addActionListener(chPass);
+
+
 		mainPanel.setBackground(Color.cyan);
 
 		frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
@@ -162,11 +213,16 @@ public class ClientMain {
 
 	public static void playMusic()
 	{
-		File f = new File("C:/Users/a123a/Documents/GitHub/project-7-chat-room-pr7-pair-29/assignment_7/src/chatmusic.mp3");
-		Media m = new Media(Paths.get("C:/Users/a123a/Documents/GitHub/project-7-chat-room-pr7-pair-29/assignment_7/src/chatmusic.mp3").toUri().toString());
-		MediaPlayer mp = new MediaPlayer(m);
+
+		File f = new File(musicPath);
+		URI u = f.toURI();
+		Media m = new Media(u.toString());
+
+        mp = new MediaPlayer(m);
 		mp.play();
 	}
+
+
 
 	class SendButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
@@ -199,6 +255,35 @@ public class ClientMain {
 			passwordStr = JOptionPane.showInputDialog(null, "New Password: ");
 		}
 	};
+
+
+    ActionListener stopMusic = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e ) {
+            
+            mp.stop();
+        }
+    };
+
+    ActionListener loadMusic = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            musicPath = JOptionPane.showInputDialog(null, "Enter Music File Path: ");
+        }
+    };
+
+    ActionListener browseMusic = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new JFXPanel();
+            selection.showOpenDialog(mainPanel);
+            musicPath = selection.getSelectedFile().getAbsolutePath();
+            playMusic();
+
+        }
+    };
+
+
 	Action action = new AbstractAction()
 	{
 		@Override
