@@ -1,6 +1,6 @@
-import com.sun.javafx.logging.JFRInputEvent;
-import com.sun.jmx.mbeanserver.JmxMBeanServer;
-import com.sun.media.jfxmedia.events.PlayerStateEvent;
+//import com.sun.javafx.logging.JFRInputEvent;
+//import com.sun.jmx.mbeanserver.JmxMBeanServer;
+//import com.sun.media.jfxmedia.events.PlayerStateEvent;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.media.Media;
@@ -200,7 +200,7 @@ public class ClientMain {
 
 	private void setUpNetworking() throws Exception {
 		@SuppressWarnings("resource")
-		Socket sock = new Socket(ip1, 4242);
+		Socket sock = new Socket(ip1, 4243);
 		String s = sock.getRemoteSocketAddress().toString();
 
 		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());

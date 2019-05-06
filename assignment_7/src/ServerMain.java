@@ -25,7 +25,7 @@ public class ServerMain {
 
 		clientOutputStreams = new ArrayList<PrintWriter>();
 		@SuppressWarnings("resource")
-		ServerSocket serverSock = new ServerSocket(4242);
+		ServerSocket serverSock = new ServerSocket(4243);
 		while (true) {
 			Socket clientSocket = serverSock.accept();
 
