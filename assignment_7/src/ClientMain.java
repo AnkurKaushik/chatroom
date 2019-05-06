@@ -67,8 +67,15 @@ public class ClientMain {
 		mainPanel.setPreferredSize(new Dimension(800,800));
 		mainPanel.setMinimumSize(new Dimension(800,800));
         JPanel panel = new JPanel(new BorderLayout(5, 5));
+
+
+
         //logic for ip stuff
 		ip1 = JOptionPane.showInputDialog("Enter IP address");
+
+
+
+
 
 		jmb = new JMenuBar();
 		frame.setJMenuBar(jmb);
@@ -117,6 +124,7 @@ public class ClientMain {
 
         JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
         username = new JTextField();
+
         controls.add(username);
         password = new JPasswordField();
         controls.add(password);
@@ -190,8 +198,11 @@ public class ClientMain {
 		frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
 		frame.setSize(650, 500);
 
+		//this makes the window actually visible
 		frame.setVisible(true);
-
+        outgoing.setText("nblahde blugugu");
+		//adding the user data to username hashmap using IP address as a key
+        //ServerMain.username.put(ServerMain.please.getLocalSocketAddress().toString(),user.getText());
 
 		//frame.getContentPane().setBackground(Color.BLUE);
 		//frame.setBackground(Color.BLUE);
@@ -202,6 +213,8 @@ public class ClientMain {
 		@SuppressWarnings("resource")
 		Socket sock = new Socket(ip1, 4243);
 		String s = sock.getRemoteSocketAddress().toString();
+        System.out.println("Remote Socket Address: " + s);
+        System.out.println("Local Socket Address: " + sock.getLocalSocketAddress());
 
 		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 		reader = new BufferedReader(streamReader);
@@ -275,7 +288,7 @@ public class ClientMain {
     ActionListener browseMusic = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            new JFXPanel();
+            new JFXPanel(); //this allows the music to work
             selection.showOpenDialog(mainPanel);
             musicPath = selection.getSelectedFile().getAbsolutePath();
             playMusic();

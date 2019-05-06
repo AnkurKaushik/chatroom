@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -11,7 +8,12 @@ import java.util.Hashtable;
 
 public class ServerMain {
 	private ArrayList<PrintWriter> clientOutputStreams;
+	static String usernameInput;
 	static HashMap<String, String> username = new HashMap<>();
+	//static HashMap<String, String> socketMap = new HashMap<>();
+	static Socket please;
+	static SocketAddress helpMe;
+	static DataInputStream incomingData;
 	static int n = 0;
 	public static void main(String[] args) {
 		try {
@@ -30,8 +32,11 @@ public class ServerMain {
 			Socket clientSocket = serverSock.accept();
 
 			n += 1;
-			username.put(clientSocket.getRemoteSocketAddress().toString(), "Guest " + n);
-
+			username.put(clientSocket.getLocalSocketAddress().toString(), "Guest " + n);
+			username.put(clientSocket.getLocalSocketAddress().toString(), usernameInput);
+			System.out.println("Remote Socket Address: " + clientSocket.getRemoteSocketAddress());
+			System.out.println("Local Socket Address: " + clientSocket.getLocalAddress());
+			//username.put(clientSocket.getRemoteSocketAddress().toString(),  + n);
 			PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 			clientOutputStreams.add(writer);
 
@@ -58,6 +63,9 @@ public class ServerMain {
 		public ClientHandler(Socket clientSocket) throws IOException {
 			Socket sock = clientSocket;
 			s = clientSocket.getRemoteSocketAddress();
+			please = sock;
+			helpMe = s;
+			System.out.println(s);
 			reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		}
 
@@ -67,7 +75,9 @@ public class ServerMain {
 				while ((message = reader.readLine()) != null) {
 
 						System.out.println("read " + message);
+						System.out.println("Remote Socket Address: " + s);
 						notifyClients(ServerMain.username.get(s.toString()) + ": " + message);
+
 
 				}
 			} catch (IOException e) {
