@@ -50,7 +50,7 @@ public class ServerMain {
 
 	private void notifyClients(String message) {
 
-		if(message.length() > 19)
+		if(message.length() > 20)
 		{
 			if(message.substring(9,11).equals("DM"))
 			{
@@ -83,6 +83,7 @@ public class ServerMain {
 			for (PrintWriter writer : clientOutputStreams)
 			{
 				writer.println(message);
+				writer.flush();
 				writer.flush();
 			}
 		}

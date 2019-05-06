@@ -145,7 +145,7 @@ public class ClientMain {
 		friends.setLineWrap(true);
 		friends.setWrapStyleWord(true);
 		friends.setSelectionStart(0);
-		friends.append("Friends List");
+		friends.append("Friends List \n");
 		mainPanel.add(friends);
 
 		//going to make a dropdown to set font type
@@ -408,6 +408,8 @@ public class ClientMain {
 							friends.append(message.substring(19, message.length()) + "\n");
 							incoming.append(message.substring(19, message.length()) + " was added as a friend" + "\n");
 						}
+						else
+						incoming.append(message + "\n");
 					}
 					else
 						incoming.append(message + "\n");
