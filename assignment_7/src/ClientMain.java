@@ -200,7 +200,7 @@ public class ClientMain {
 
 		//this makes the window actually visible
 		frame.setVisible(true);
-        outgoing.setText("nblahde blugugu");
+        outgoing.setText("");
 		//adding the user data to username hashmap using IP address as a key
         //ServerMain.username.put(ServerMain.please.getLocalSocketAddress().toString(),user.getText());
 

@@ -10,7 +10,7 @@ public class ServerMain {
 	private ArrayList<PrintWriter> clientOutputStreams;
 	static String usernameInput;
 	static HashMap<String, String> username = new HashMap<>();
-	//static HashMap<String, String> socketMap = new HashMap<>();
+	static HashMap<String, PrintWriter> userWriter = new HashMap<>();
 	static Socket please;
 	static SocketAddress helpMe;
 	static DataInputStream incomingData;
@@ -32,13 +32,14 @@ public class ServerMain {
 			Socket clientSocket = serverSock.accept();
 
 			n += 1;
-			username.put(clientSocket.getLocalSocketAddress().toString(), "Guest " + n);
-			username.put(clientSocket.getLocalSocketAddress().toString(), usernameInput);
+			//username.put(clientSocket.getLocalSocketAddress().toString(), "Guest " + n);
+			//username.put(clientSocket.getLocalSocketAddress().toString(), usernameInput);
 			System.out.println("Remote Socket Address: " + clientSocket.getRemoteSocketAddress());
 			System.out.println("Local Socket Address: " + clientSocket.getLocalAddress());
-			//username.put(clientSocket.getRemoteSocketAddress().toString(),  + n);
+			username.put(clientSocket.getRemoteSocketAddress().toString(), "Guest "  + n);
 			PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 			clientOutputStreams.add(writer);
+			userWriter.put("Guest " + n, writer);
 
 			Thread t = new Thread(new ClientHandler(clientSocket));
 			t.start();
@@ -49,10 +50,41 @@ public class ServerMain {
 
 	private void notifyClients(String message) {
 
+		if(message.length() > 19)
+		{
+			if(message.substring(9,11).equals("DM"))
+			{
+				String clientDM = message.substring(12,19);
+				if(userWriter.containsKey(clientDM))
+				{
+					String newMsg = message.substring(0,7)+ " DM'd you: " + message.substring(20, message.length());
+					userWriter.get(clientDM).println(newMsg);
+					userWriter.get(clientDM).flush();
+				}
+				else
+				{
+					userWriter.get(message.substring(0,7)).println("user not found");
+					userWriter.get(message.substring(0,7)).flush();
+				}
+			}
+			else
+			{
 
-		for (PrintWriter writer : clientOutputStreams) {
-			writer.println(message);
-			writer.flush();
+				for (PrintWriter writer : clientOutputStreams)
+				{
+					System.out.print("reached");
+					writer.println(message);
+					writer.flush();
+				}
+			}
+		}
+		else
+		{
+			for (PrintWriter writer : clientOutputStreams)
+			{
+				writer.println(message);
+				writer.flush();
+			}
 		}
 	}
 
